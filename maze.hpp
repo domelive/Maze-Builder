@@ -1,5 +1,6 @@
 #include "utils.hpp"
 #include <vector>
+#include <queue>
 #include <stack>
 #include <cstdlib>
 #include <ctime>
@@ -25,4 +26,6 @@ class Maze {
     public:
         Maze();
         void draw();
+        void solveBFS(Cell* start, Cell* end);
+        std::vector<Cell> getGrid();
 };

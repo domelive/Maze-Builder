@@ -10,6 +10,7 @@ int main(int argc, char* argv[]) {
     while(!WindowShouldClose()) {
         BeginDrawing();
             ClearBackground(RAYWHITE);
+            maze.solveBFS(&maze.getGrid()[0], &maze.getGrid()[maze.getGrid().size() - 1]);
             maze.draw();
         EndDrawing();
     }

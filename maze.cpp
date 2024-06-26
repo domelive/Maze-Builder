@@ -9,7 +9,7 @@ Cell::Cell(int xPos, int yPos) {
 void Cell::drawCell(Cell current) {
     int xStart = current.xPos * scr::CELL_SIZE;
     int yStart = current.yPos * scr::CELL_SIZE;
-
+    
     if(current.visited) {
         DrawRectangle(xStart, yStart, xStart + scr::CELL_SIZE, yStart + scr::CELL_SIZE, GRAY);
     }
@@ -123,9 +123,61 @@ Maze::Maze() {
     initializeMaze();
 }
 
+// FIX: BFS algorithm
+void Maze::solveBFS(Cell* start, Cell* end) {
+    std::queue<Cell*> q;
+    q.push(start);
+
+    while(!q.empty()) {
+        Cell* current = q.front();
+        q.pop();
+
+        if(current == end) {
+            break;
+        }
+
+        // top neighbor
+        if(current->yPos > 0) {
+            Cell* top = &this->grid[this->index(current->xPos, current->yPos - 1)];
+            if(!top->visited) {
+                q.push(top);
+                top->visited = true;
+            }
+        }
+        // right neighbor
+        if(current->xPos < grid::COLS - 1) {
+            Cell* right = &this->grid[this->index(current->xPos + 1, current->yPos)];
+            if(!right->visited) {
+                q.push(right);
+                right->visited = true;
+            }
+        }
+        // bottom neighbor
+        if(current->yPos < grid::ROWS - 1) {
+            Cell* bottom = &this->grid[this->index(current->xPos, current->yPos + 1)];
+            if(!bottom->visited) {
+                q.push(bottom);
+                bottom->visited = true;
+            }
+        }
+        // left neighbor
+        if(current->xPos > 0) {
+            Cell* left = &this->grid[this->index(current->xPos - 1, current->yPos)];
+            if(!left->visited) {
+                q.push(left);
+                left->visited = true;
+            }
+        }
+    }
+}
 
 void Maze::draw() {
     for(int i = 0; i < grid.size(); i++) {
-        grid[i].drawCell(grid[i]);
+        this->grid[i].drawCell(grid[i]);
+        this->grid[i].visited = false;
     }
+}
+
+std::vector<Cell> Maze::getGrid() {
+    return this->grid;
 }
