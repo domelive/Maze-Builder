@@ -26,4 +26,5 @@ class Maze {
         void removeWalls(Cell* current, Cell* next);
         int index(int x, int y); // converts a 2D index into a 1D index
         Cell* selectRandomNeighbor(Cell* current);
+        void generateMazeDFS(Cell* current);
 };

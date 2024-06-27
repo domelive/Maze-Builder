@@ -8,7 +8,10 @@ Maze::Maze() {
             this->grid.push_back(Cell(j, i));
         }
     }
+    
     this->source = &this->grid[0];
+    // immediate generation of the maze
+    this->generateMazeDFS(this->source);
 }
 
 void Maze::draw() {
@@ -16,6 +19,8 @@ void Maze::draw() {
         this->drawCell(this->grid[i]);
     }
 
+    // animated process
+    /*a
     this->source->visited = true;
     Cell* next = this->selectRandomNeighbor(this->source);
     DrawRectangle(this->source->xPos * cst::CELL_SIZE, this->source->yPos * cst::CELL_SIZE, cst::CELL_SIZE, cst::CELL_SIZE, RED);
@@ -26,10 +31,13 @@ void Maze::draw() {
         this->visitedCells.push(next);
         next->visited = true;
         this->source = next;
-    } else {
+    } else if(this->visitedCells.size() > 0){
         this->source = this->visitedCells.top();
         this->visitedCells.pop();
+    } else {
+        return;
     }
+    */
 }
 
 void Maze::drawCell(Cell current) {
@@ -112,5 +120,53 @@ Cell* Maze::selectRandomNeighbor(Cell* current) {
         return neighbors[randVal];
     } else {
         return nullptr;
+    }
+}
+
+void Maze::generateMazeDFS(Cell* current) {
+    current->visited = true;
+    Cell* next = nullptr;
+
+    while(true) {
+        std::vector<Cell*> neighbors;
+       
+        if(current->xPos > 0) {
+            int left = this->index(current->xPos - 1, current->yPos);
+            if(!this->grid[left].visited) {
+                neighbors.push_back(&this->grid[left]);
+            }
+        }
+        if(current->yPos > 0) {
+            int top = this->index(current->xPos, current->yPos - 1);
+            if(!this->grid[top].visited) {
+                neighbors.push_back(&this->grid[top]);
+            }
+        }
+        if(current->xPos < cst::G_COLS - 1) {
+            int right = this->index(current->xPos + 1, current->yPos);
+            if(!this->grid[right].visited) {
+                neighbors.push_back(&this->grid[right]);
+            }
+        }
+        if(current->yPos < cst::G_ROWS - 1) {
+            int bottom = this->index(current->xPos, current->yPos + 1);
+            if(!this->grid[bottom].visited) {
+                neighbors.push_back(&this->grid[bottom]);
+            }
+        }
+
+        if(neighbors.size() > 0) {
+            int randVal = rand() % neighbors.size();
+            next = neighbors[randVal];
+            this->visitedCells.push(current);
+            this->removeWalls(current, next);
+            current = next;
+            current->visited = true;
+        } else if(this->visitedCells.size() > 0) {
+            current = this->visitedCells.top();
+            this->visitedCells.pop();
+        } else {
+            break;
+        }
     }
 }
