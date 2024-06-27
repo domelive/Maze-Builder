@@ -4,9 +4,9 @@
 #include <ctime>
 
 int main(int argc, char* argv[]) {
-    srand(time(nullptr));
+    // srand(time(nullptr));
     InitWindow(cst::S_WIDTH, cst::S_HEIGHT, "Maze Generator");
-    SetTargetFPS(3);
+    SetTargetFPS(2);
     
     Maze maze = Maze();   
 

@@ -2,7 +2,7 @@
 #include <raylib.h>
 
 Maze::Maze() {
-    srand(time(nullptr));
+    // srand(time(nullptr));
     for(int i = 0; i < cst::G_ROWS; i++) {
         for(int j = 0; j < cst::G_COLS; j++) {
             this->grid.push_back(Cell(j, i));
@@ -18,10 +18,17 @@ void Maze::draw() {
 
     this->source->visited = true;
     Cell* next = this->selectRandomNeighbor(this->source);
-    
+    DrawRectangle(this->source->xPos * cst::CELL_SIZE, this->source->yPos * cst::CELL_SIZE, cst::CELL_SIZE, cst::CELL_SIZE, RED);
+
     if(next) {
+        this->visitedCells.push(this->source);
+        this->removeWalls(this->source, next);
+        this->visitedCells.push(next);
         next->visited = true;
         this->source = next;
+    } else {
+        this->source = this->visitedCells.top();
+        this->visitedCells.pop();
     }
 }
 
@@ -48,7 +55,27 @@ void Maze::drawCell(Cell current) {
 }
 
 void Maze::removeWalls(Cell* current, Cell* next) {
+    if(!current || !next) {
+        return;
+    }
 
+    int xDiff = current->xPos - next->xPos;
+    if(xDiff == 1) {
+        current->walls[3] = false;
+        next->walls[1] = false;
+    } else if(xDiff == -1) {
+        current->walls[1] = false;
+        next->walls[3] = false;
+    }
+
+    int yDiff = current->yPos - next->yPos;
+    if(yDiff == 1) {
+        current->walls[0] = false;
+        next->walls[2] = false;
+    } else if(yDiff == -1){
+        current->walls[2] = false;
+        next->walls[0] = false;
+    }
 }
 
 int Maze::index(int x, int y) {
