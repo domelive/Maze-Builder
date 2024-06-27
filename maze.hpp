@@ -1,31 +1,29 @@
-#include "utils.hpp"
+#include <raylib.h>
 #include <vector>
-#include <queue>
 #include <stack>
 #include <cstdlib>
 #include <ctime>
+#include "utils.hpp"
 
-class Cell {
-    public:
-        int xPos, yPos;
-        bool visited = false;
-        bool walls[4] = {true, true, true, true}; // top, right, bottom, left
-        
-        Cell(int xPos, int yPos);
-        void drawCell(Cell current);
+struct Cell {
+    int xPos, yPos;
+    bool walls[4] = {true, true, true, true};
+    bool visited = false;
+
+    Cell(int xPos, int yPos) : xPos(xPos), yPos(yPos) {}
 };
 
 class Maze {
-    private:
-        std::vector<Cell> grid;
-        std::stack<Cell*> cellStack;
-        void removeWalls(Cell* current, Cell* next);
-        int index(int x, int y);
-        void generateMazeDFS(Cell* current);
-        void initializeMaze();
     public:
         Maze();
         void draw();
-        void solveBFS(Cell* start, Cell* end);
-        std::vector<Cell> getGrid();
+    private:
+        std::vector<Cell> grid;
+        std::stack<Cell*> visitedCells;
+        Cell* source;
+
+        void drawCell(Cell current);
+        void removeWalls(Cell* current, Cell* next);
+        int index(int x, int y); // converts a 2D index into a 1D index
+        Cell* selectRandomNeighbor(Cell* current);
 };

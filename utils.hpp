@@ -1,13 +1,8 @@
-#include <raylib.h>
+namespace cst {
+    const int S_WIDTH = 800;
+    const int S_HEIGHT = 600;
 
-namespace scr {
-    const int WIDTH = 800;
-    const int HEIGHT = 600;
-    const int FPS = 60;
     const int CELL_SIZE = 20;
-}
-
-namespace grid {
-    const int ROWS = scr::HEIGHT / scr::CELL_SIZE;
-    const int COLS = scr::WIDTH / scr::CELL_SIZE;
+    const int G_COLS = S_WIDTH / CELL_SIZE;
+    const int G_ROWS = S_HEIGHT / CELL_SIZE;
 }
